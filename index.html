@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新年快乐 - 烟花促销</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --card-width: 200px;
+        }
+        
+        body {
+            background-color: #FFF9F0;
+            font-family: "Microsoft YaHei", sans-serif;
+            min-width: 320px;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #FF4D4D, #FF8C00);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            border-bottom: 2px solid #FFC107;
+        }
+        
+        .header h1 {
+            color: #FFF5E0;
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(139, 0, 0, 0.3);
+            animation: shine 2s infinite, scale 2s infinite;
+            letter-spacing: 10px;
+            font-weight: bold;
+        }
+        
+        .header::before,
+        .header::after {
+            content: "🧨";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5em;
+            animation: swing 2s infinite;
+        }
+        
+        .header::before {
+            left: 20%;
+        }
+        
+        .header::after {
+            right: 20%;
+        }
+        
+        @keyframes shine {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        
+        @keyframes scale {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes swing {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            50% { transform: translateY(-50%) rotate(15deg); }
+            100% { transform: translateY(-50%) rotate(0deg); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(var(--card-width), 1fr));
+            gap: 10px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" x="50" text-anchor="middle" fill="rgba(255,0,0,0.03)" font-size="80">福</text></svg>');
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 8px;
+            padding: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #FFE4C4;
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255,140,0,0.2);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .product-name {
+            font-size: 0.9em;
+            margin: 5px 0;
+            color: #D35400;
+            font-weight: bold;
+        }
+        
+        .product-price {
+            color: #E74C3C;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(231,76,60,0.1);
+        }
+        
+        .product-description {
+            color: #7F8C8D;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+        
+        /* 移动端适配 */
+        @media screen and (max-width: 768px) {
+            :root {
+                --card-width: 150px;
+            }
+            
+            .container {
+                padding: 10px;
+                gap: 8px;
+            }
+            
+            .header::before {
+                left: 10%;
+            }
+            
+            .header::after {
+                right: 10%;
+            }
+            
+            .header h1 {
+                letter-spacing: 5px;
+            }
+            
+            .product-image {
+                height: 100px;
+            }
+            
+            .product-name {
+                font-size: 0.8em;
+            }
+            
+            .product-price {
+                font-size: 1em;
+            }
+            
+            .product-description {
+                font-size: 0.7em;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            :root {
+                --card-width: 120px;
+            }
+            
+            .container {
+                padding: 5px;
+                gap: 5px;
+            }
+            
+            .header::before,
+            .header::after {
+                display: none;
+            }
+            
+            .header h1 {
+                letter-spacing: 3px;
+            }
+            
+            .product-image {
+                height: 80px;
+            }
+            
+            .product-card {
+                padding: 5px;
+            }
+            
+            .product-name {
+                font-size: 0.75em;
+                margin: 3px 0;
+            }
+            
+            .product-price {
+                font-size: 0.9em;
+            }
+            
+            .product-description {
+                font-size: 0.65em;
+                margin-top: 3px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>新年快乐</h1>
+    </div>
+    
+    <div class="container" id="productContainer"></div>
+
+    <script>
+        const mockProducts = [
+        {
+          id: 1,
+          name: "三分钟（小）",
+          price: 20,
+          description: "绚丽多彩，适合节日庆典",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/1.jpg",
+        },
+        {
+          id: 2,
+          name: "三分钟（大）",
+          price: 30,
+          description: "声音宏亮，效果震撼",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/2.jpg",
+        },
+        {
+          id: 3,
+          name: "孔雀开屏（小）",
+          price: 15,
+          description: "持续时间长，效果绚丽",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/3.jpg",
+        },
+        {
+          id: 4,
+          name: "孔雀开屏（大）",
+          price: 30,
+          description: "绚丽夺目，浪漫温馨",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/4.jpg",
+        },
+        {
+          id: 5,
+          name: "钛花水母",
+          price: 15,
+          description: "金光闪闪，气势磅礴",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/5.jpg",
+        },
+        {
+          id: 6,
+          name: "舞龙棒（大号）",
+          price: 15,
+          description: "寓意吉祥，场面宏大",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/6.jpg",
+        },
+        {
+          id: 7,
+          name: "钻石龙珠",
+          price: 20,
+          description: "红光璀璨，热闹喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/7.jpg",
+        },
+        {
+          id: 8,
+          name: "七彩转盘",
+          price: 25,
+          description: "流光溢彩，美不胜收",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/8.jpg",
+        },
+        {
+          id: 9,
+          name: "魔力顺风车",
+          price: 30,
+          description: "豪华大气，震撼人心",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/9.jpg",
+        },
+        {
+          id: 10,
+          name: "网红彩菊",
+          price: 15,
+          description: "浪漫告白，永恒真爱",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/10.jpg",
+        },
+        {
+          id: 11,
+          name: "黄金万两",
+          price: 20,
+          description: "至尊享受，独一无二",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/11.jpg",
+        },
+        {
+          id: 12,
+          name: "童心飞扬",
+          price: 15,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/12.jpg",
+        },
+        {
+          id: 13,
+          name: "玩个锤子",
+          price: 15,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/13.jpg",
+        },
+        {
+          id: 14,
+          name: "炸花火箭",
+          price: 5,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/14.jpg",
+        },
+        {
+          id: 15,
+          name: "狼嚎火箭",
+          price: 30,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/15.jpg",
+        },
+        {
+          id: 16,
+          name: "变变变",
+          price: 8,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/16.jpg",
+        },
+        {
+          id: 17,
+          name: "妙妙妙",
+          price: 10,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/17.jpg",
+        },
+        {
+          id: 18,
+          name: "28寸仙女棒",
+          price: 4,
+          description: "吉祥如意，圆满喜庆。10块3盒",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/18.jpg",
+        },
+        {
+          id: 19,
+          name: "18寸仙女棒",
+          price: 3,
+          description: "吉祥如意，圆满喜庆。10块4盒",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/19.jpg",
+        },
+        {
+          id: 20,
+          name: "正宗黑老大",
+          price: 5,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/20.jpg",
+        },
+        {
+          id: 21,
+          name: "白洋淀",
+          price: 2,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/21.jpg",
+        },
+        {
+          id: 22,
+          name: "小金鱼",
+          price: 5,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/22.jpg",
+        },
+        {
+          id: 23,
+          name: "霹雳小子",
+          price: 20,
+          description: "吉祥如意，圆满喜庆。一小盒三3块",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/23.jpg",
+        },
+        {
+          id: 24,
+          name: "加特林",
+          price: 35,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/24.jpg",
+        },
+        {
+          id: 25,
+          name: "美丽炮弹",
+          price: 80,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/25.jpg",
+        },
+        {
+          id: 26,
+          name: "开门红（25发小礼炮）",
+          price: 30,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/26.jpg",
+        },
+        {
+          id: 27,
+          name: "吉日子",
+          price: 80,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/jrz.jpg",
+        },
+        {
+          id: 28,
+          name: "盘炮（大）",
+          price: 40,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/28.jpg",
+        },
+        {
+          id: 29,
+          name: "虎报佳音",
+          price: 350,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/29.jpg",
+        },
+        {
+          id: 30,
+          name: "四大名楼",
+          price: 200,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/30.jpg",
+        },
+        {
+          id: 31,
+          name: "空中花园",
+          price: 150,
+          description: "吉祥如意，圆满喜庆",
+          image:
+            "https://wh-gaoxiao.oss-cn-hangzhou.aliyuncs.com/applet/static/pubImage/31.jpg",
+        },
+      ]; 
+        
+        const productContainer = document.getElementById('productContainer');
+        
+        mockProducts.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            
+            productCard.innerHTML = `
+                <img class="product-image" src="${product.image}" alt="${product.name}">
+                <h2 class="product-name">${product.name}</h2>
+                <p class="product-price">￥${product.price}</p>
+                <p class="product-description">${product.description}</p>
+            `;
+            
+            productContainer.appendChild(productCard);
+        });
+    </script>
+</body>
+</html> 
